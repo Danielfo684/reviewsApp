@@ -34,7 +34,7 @@ export default class ResponseRow {
         const buttonView = document.createElement('a');
         let textNode = document.createTextNode('Read Reviews');
         buttonView.appendChild(textNode);
-        buttonView.setAttribute('data-bs-toggle', 'modal');;
+        buttonView.setAttribute('data-bs-toggle', 'modal');
         buttonView.setAttribute('data-bs-target', '#viewModal');
         buttonView.classList.add('btn', 'btn-primary', 'col-auto', 'mb-2');
         const icon = document.createElement('i');
@@ -61,9 +61,11 @@ export default class ResponseRow {
 
         const buttonReview = document.createElement('button');
         buttonReview.textContent = 'Write Review';
+        buttonReview.setAttribute('data-bs-toggle', 'modal');
+        buttonReview.setAttribute('data-bs-target', '#reviewModal');
         buttonReview.id = 'buttonReview';
-        buttonReview.classList.add('btn', 'btn-info', 'col-auto', 'mb-2');
-       buttonReview.dataset.url = "/review/" + id;
+        buttonReview.classList.add('btn', 'btn-info', 'col-auto', 'mb-2', 'buttonReview');
+       buttonReview.dataset.url = "/review";
        buttonReview.dataset.id = id;
 
         buttonSection.append(buttonRead, buttonReview);

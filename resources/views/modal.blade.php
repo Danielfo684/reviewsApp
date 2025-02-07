@@ -150,7 +150,6 @@
 
 
 
-
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -164,7 +163,12 @@
                         <label for="reviewContent" class="form-label">Review</label>
                         <textarea class="form-control" id="reviewContent" name="content"></textarea>
                     </div>
-                </form>
+                    <div class="mb-3">
+                        <label for="reviewRating" class="form-label">Rating</label>
+                        <input type="number" class="form-control" id="reviewRating" name="rating" min="0" max="5">
+                    </div>
+                    </form>
+
             </div>
             <div class="alert alert-warning" role="alert" id="modalReviewWarning">An error occurred. The review has not been added.</div>
             <div class="modal-footer">

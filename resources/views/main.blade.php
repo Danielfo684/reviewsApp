@@ -89,7 +89,7 @@
                 @endauth
                 
                 <div class="alert alert-danger" role="alert" id="userError">Algo ha salido mal con tu conexión</div>
-                <div class="alert alert-sucess" role="alert" id="bookSuccess">¡Libro agregado con éxito!</div>
+                <div class="alert alert-success" role="alert" id="bookSuccess">¡Libro agregado con éxito!</div>
                 <div class="alert alert-danger" role="alert" id="bookError">¡Error al agregar el libro!</div>
 
                 <!-- Dynamic content -->

@@ -28,11 +28,14 @@ export default class HttpClient {
             options.body = JSON.stringify(parameters);
         }
         fetch(fullUrl, options)
-            .then(response => {
-                
-                console.log(response.status);
-                return response.json();
-            })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message || 'Unknown error');
+                });
+            }
+            return response.json();
+        })
             .then(data => {
                 console.log("Data received from the server:", data);
                 callBack(data);

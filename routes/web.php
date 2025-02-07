@@ -19,3 +19,4 @@ Route::get('review/{id}', [ReviewController::class, 'index'])->name('reviews');
 Route::post('login', [UserController::class, 'login'])->name('login');
 Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::post('logout', [UserController::class, 'logout'])->name('logout');
+Route::post('/review', [ReviewController::class, 'store'])->name('review');

@@ -34,6 +34,10 @@ export default class ModalEvents {
         this.modalView = document.getElementById('viewModal');
       
         this.modalReview = document.getElementById('reviewModal');
+        this.modalReviewButton = document.getElementById('modalReviewButton');
+        this.reviewContent = document.getElementById('reviewContent');
+        this.reviewRating = document.getElementById('reviewRating');
+
         // this.viewAuthor = document.getElementById('viewAuthor');
         // this.viewDescription = document.getElementById('viewDescription');
 
@@ -60,6 +64,7 @@ export default class ModalEvents {
     }
 
     assignEvents() {
+        let selectedBookId = null;
         this.modalView.addEventListener('show.bs.modal', event => {
         console.log(event.relatedTarget.dataset.url);
         console.log(this.url);
@@ -76,10 +81,38 @@ export default class ModalEvents {
             );
         });
         
-    this.modalReview.addEventListener('show.bs.modal', event => {
-        console.log(event.relatedTarget.dataset.url);
+        this.modalReview.addEventListener('show.bs.modal', event => {
+            console.log(event.relatedTarget.dataset.url);
+            console.log(this.url);
 
-    });
+            this.fetchUrl = event.relatedTarget.dataset.url;
+            this.reviewContent.value = '';
+            selectedBookId = event.relatedTarget.dataset.id; // Store the book ID
+
+        });
+
+        this.modalReviewButton.addEventListener('click', event => {
+            document.getElementById('modalReviewWarning').style.display = 'none';
+            console.log(this.fetchUrl);
+            console.log(this.reviewContent.value);
+            this.httpClient.post(
+                this.fetchUrl,
+                {   
+                    book_id: selectedBookId,
+                    review: this.reviewContent.value,
+                    rating: this.reviewRating.value
+                },
+                data => {
+                    if (!data.result) {
+                        console.error('Error:', data.message);
+                    }
+                    this.responseCreateReview(data);
+                }
+            );
+        });
+    
+
+
 
         this.modalCreate.addEventListener('show.bs.modal', event => {
             this.fetchUrl = event.relatedTarget.dataset.url;
@@ -177,7 +210,7 @@ export default class ModalEvents {
     }
 
     responseCreate(data) {
-        console.log(data.result);
+        console.log(data);
         if (data.result) {
             this.bookSuccess.style.display = 'block';
             bootstrap.Modal.getInstance(this.modalCreate).hide();
@@ -241,7 +274,32 @@ this.modalView.querySelector('#reviewDiv' + j).querySelector('#reviewData').text
      j++;
     });
    
-} 
+}
+
+
+responseCreateReview(data) {
+    console.log(data.result);
+
+    if (data.result) {
+        this.bookSuccess.style.display = 'block';
+        this.bookSuccess.textContent = 'Review created successfully';
+        bootstrap.Modal.getInstance(this.modalReview).hide();
+        // this.responseCommonContent(data);
+        setTimeout(() => {
+            this.bookSuccess.style.display = 'none';
+        }, 4000);
+    } else { 
+        bootstrap.Modal.getInstance(this.modalReview).hide();
+
+        document.getElementById('userError').style.display = 'block';
+        document.getElementById('userError').textContent = data.message;
+        setTimeout(() => {
+            document.getElementById('userError').style.display = 'none';
+            document.getElementById('userError').innerHTML = '';
+        }, 4000);
+    }
+}
+
 
     init() {
         this.httpClient.get(

@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Illuminate\Support\Facades\Validator;
+
 class ReviewController extends Controller
 {
     /**
@@ -45,25 +46,41 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required|bigInteger',
-            'book_id' => 'required|bigInteger',
+
+        if (!Auth::check()) {
+            return response()->json([
+                'result' => false,
+                'message' => 'You must be logged in to leave a review.'
+            ], 401);
+        }
+        $validator = Validator::make($request->all(), [
+            'book_id' => 'required|exists:books,id',
             'rating' => 'required|integer|min:0|max:5',
-            'review' => 'required|max:1000'
-                ]);
-
-        $review = Review::create([
-            'user_id' => Auth::id(),
-            'book_id' => $request->book_id,
-            'rating' => $request->rating,
-            'review' => $request->review
+            'review' => 'required|max:1000',
         ]);
-        return response()->json([
-            'message' => 'Review successfully created',
-            'review' => $review
-        ], 201);
-    }
 
+        if ($validator->fails()) { 
+        return response()->json([
+            'result' => false,
+            'message' => 'The review has not been saved.'
+        ], 500);
+        }
+
+        $review = new Review();
+        $review->user_id = Auth::id();
+        $review->book_id = $request->book_id;
+        $review->rating = $request->rating;
+        $review->review = $request->review;
+        $result = $review->save();
+
+        if ($result) {
+            return response()->json([
+                'result' => true,
+                'message' => 'Review successfully added',
+                'review' => $review
+            ], 201);
+        } 
+    }
     /**
      * Display the specified resource.
      */
